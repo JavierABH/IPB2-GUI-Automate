@@ -1,13 +1,13 @@
 import tkinter as tk
 from tkinter import messagebox
-
+import threading
 
 class MyApplication(tk.Tk):
     def __init__(self):
         super().__init__()
 
         self.serial = None  
-        self.test = False
+        self.init_test = False
         self.title("IPB2 Sequence")
         self.geometry("200x100")
         self.protocol("WM_DELETE_WINDOW", self.confirm_exit)
@@ -24,7 +24,7 @@ class MyApplication(tk.Tk):
         self.serial_entry.grid(row=0, column=1, padx=10, pady=10)
         self.serial_entry.bind("<Return>", self.process_serial)
 
-        start_test_button = tk.Button(self, text="Start Test", command=self.start_test)
+        start_test_button = tk.Button(self, text="Start Test", command=self._start_test)
         start_test_button.grid(row=1, column=1, padx=10, pady=10)
 
     def _center_window(self):
@@ -45,9 +45,10 @@ class MyApplication(tk.Tk):
         # self.serial_entry.delete(0, tk.END)
         print(serial)  # Replace this with the desired operation
 
-    def start_test(self):
-        self.test = True
+    def _start_test(self):
+        self.init_test = True
         self.serial_entry.delete(0, tk.END)
+        self.hide()
 
     def close_main_window(self):
         self.destroy()
@@ -56,6 +57,7 @@ class MyApplication(tk.Tk):
         self.withdraw()
 
     def show(self):
+        self.init_test = False
         self.deiconify()
 
     def create_success_window(self):
@@ -145,6 +147,12 @@ class MyApplication(tk.Tk):
         )
         ok_button.pack(pady=10)
 
+    def update(self):
+        def run():
+            self.mainloop()
+
+        self.thread = threading.Thread(target=run)
+        self.thread.start()
 
 if __name__ == "__main__":
     app = MyApplication()

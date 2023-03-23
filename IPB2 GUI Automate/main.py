@@ -1,8 +1,6 @@
 import tkinter as tk
 import configparser
 import clr
-import threading
-
 
 from utilities.melexishandler import ProgramHandler
 from gui.gui import MyApplication
@@ -28,6 +26,7 @@ insertprocess_data_enabled = settings["Default"]["InsertProcessData"]
 only_pass_enabled = settings["Default"]["OnlyInsertPass"]
 
 def main():
+    gui_app = MyApplication()
     # Traceability dll connection
     connector = Connector() #traceability connection
 
@@ -52,13 +51,10 @@ def main():
         melexis.write_text("4")
 
     while melexis.opened:
-        # Se abre GUI que pide escanear PCB
-        gui_app = MyApplication()
-        # se espera hasta que se presione el boton Iniciar prueba
-        if gui_app.test:
-            # Se oculta GUI que pide escanear PCB
-            gui_app.close_main_window()
-            
+        # se muestra gui en primer plano
+        gui_app.show()
+        # se espera hasta que se presione el boton Iniciar prueba que indica que ya se puede iniciar el proceso
+        if gui_app.init_test:            
 
             if gui_app.serial == None:
                 continue
@@ -102,6 +98,4 @@ def main():
 
 
 if __name__ == "__main__":
-    gui_app = MyApplication()
     main()
-    gui_app.mainloop()
