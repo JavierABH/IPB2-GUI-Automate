@@ -27,14 +27,26 @@ validate_partnumber_enabled = settings["Default"]["ValidatePartNumber"]
 insertprocess_data_enabled = settings["Default"]["InsertProcessData"]
 only_pass_enabled = settings["Default"]["OnlyInsertPass"]
 
-def main():
-    # Define the object gui_app, which will contain the functions for
-    # display messages throughout the test
+def valid_serial(serial):
+                
+                if len(serial) != 16:
+                    gui_app.create_serial_failure_window()
+                    return False
+                else:
+                    if validate_partnumber_enabled == 'yes':
+                        serial_partnumber = ""
+                        resp, serial_partnumber = connector.CIMP_PartNumberRef(serial,1, serial_partnumber)
+                        if expected_part_number != serial_partnumber:
+                            gui_app.create_PN_failure_window()
+                            gui_app.create_failure_window()
+                            return False
+                        else:
+                            return True
+                    else:
+                        return True
 
-    gui_app = MyApplication()
-    
-    
-    # Traceability dll connection is defined
+def main():
+    # Traceability dll connection
     connector = Connector() #traceability connection
 
     melexis = ProgramHandler(melexis_path)
@@ -59,52 +71,34 @@ def main():
 
     while melexis.opened:
         # Se abre GUI que pide escanear PCB
-
+        gui_app = MyApplication()
         # se espera hasta que se presione el boton Iniciar prueba
-
-        # Se oculta GUI que pide escanear PCB
-        gui_app.hide()
-
-        if gui_app.serial == None:
-            continue
-    
-        def valid_serial(serial):
+        if gui_app.test:
+            # Se oculta GUI que pide escanear PCB
+            gui_app.close_main_window()
             
-            if len(serial) != 16:
-                gui_app.create_serial_failure_window()
-                return False
+            if gui_app.serial == None:
+                continue
+
+            if not valid_serial(gui_app.serial):
+                continue
+
+            #se hace el backcheck de la pieza
+            if backcheck_serial_enabled == 'yes':
+                resp = connector.BackCheck_Serial(gui_app.serial, station_name)
             else:
-                if validate_partnumber_enabled == 'yes':
-                    serial_partnumber = ""
-                    resp, serial_partnumber = connector.CIMP_PartNumberRef(serial,1, serial_partnumber)
-                    if expected_part_number != serial_partnumber:
-                        gui_app.create_PN_failure_window()
-                        gui_app.create_failure_window()
-                        return False
-                    else:
-                        return True
-                else:
-                    return True
+                resp = "1|TEST FINAL FUNCTIONAL"
+            
+            #se determina si el backcheck fue aprobatorio
+            if not resp == "1|TEST FINAL FUNCTIONAL":
+                gui_app.create_backcheck_failure_window()
+                continue
 
-        if not valid_serial(gui_app.serial):
-            continue
+            melexis.freeze(2)
 
-        #se hace el backcheck de la pieza
-        if backcheck_serial_enabled == 'yes':
-            resp = connector.BackCheck_Serial(gui_app.serial, station_name)
-        else:
-            resp = "1|TEST FINAL FUNCTIONAL"
-        
-        #se determina si el backcheck fue aprobatorio
-        if not resp == "1|TEST FINAL FUNCTIONAL":
-            gui_app.create_backcheck_failure_window()
-            continue
+            # realiza la prueba
 
-        melexis.freeze(2)
 
-        # realiza la prueba
-
-        
 
 
 if __name__ == "__main__":

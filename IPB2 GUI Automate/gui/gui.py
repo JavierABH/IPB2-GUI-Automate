@@ -7,7 +7,7 @@ class MyApplication(tk.Tk):
         super().__init__()
 
         self.serial = None  
-        self.start_test = False
+        self.test = False
         self.title("IPB2 Sequence")
         self.geometry("200x100")
         self.protocol("WM_DELETE_WINDOW", self.confirm_exit)
@@ -24,7 +24,7 @@ class MyApplication(tk.Tk):
         self.serial_entry.grid(row=0, column=1, padx=10, pady=10)
         self.serial_entry.bind("<Return>", self.process_serial)
 
-        start_test_button = tk.Button(self, text="Start Test", command=self.start)
+        start_test_button = tk.Button(self, text="Start Test", command=self.start_test)
         start_test_button.grid(row=1, column=1, padx=10, pady=10)
 
     def _center_window(self):
@@ -45,8 +45,11 @@ class MyApplication(tk.Tk):
         self.serial_entry.delete(0, tk.END)
         print(serial)  # Replace this with the desired operation
 
-    def start(self):
-        self.start_test = True
+    def start_test(self):
+        self.test = True
+
+    def close_main_window(self):
+        self.destroy()
 
     def hide(self):
         self.withdraw()
