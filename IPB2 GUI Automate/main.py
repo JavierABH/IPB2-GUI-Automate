@@ -27,24 +27,6 @@ validate_partnumber_enabled = settings["Default"]["ValidatePartNumber"]
 insertprocess_data_enabled = settings["Default"]["InsertProcessData"]
 only_pass_enabled = settings["Default"]["OnlyInsertPass"]
 
-def valid_serial(serial):
-                
-                if len(serial) != 16:
-                    gui_app.create_serial_failure_window()
-                    return False
-                else:
-                    if validate_partnumber_enabled == 'yes':
-                        serial_partnumber = ""
-                        resp, serial_partnumber = connector.CIMP_PartNumberRef(serial,1, serial_partnumber)
-                        if expected_part_number != serial_partnumber:
-                            gui_app.create_PN_failure_window()
-                            gui_app.create_failure_window()
-                            return False
-                        else:
-                            return True
-                    else:
-                        return True
-
 def main():
     # Traceability dll connection
     connector = Connector() #traceability connection
@@ -77,8 +59,27 @@ def main():
             # Se oculta GUI que pide escanear PCB
             gui_app.close_main_window()
             
+
             if gui_app.serial == None:
                 continue
+        
+            def valid_serial(serial):
+                
+                if len(serial) != 16:
+                    gui_app.create_serial_failure_window()
+                    return False
+                else:
+                    if validate_partnumber_enabled == 'yes':
+                        serial_partnumber = ""
+                        resp, serial_partnumber = connector.CIMP_PartNumberRef(serial,1, serial_partnumber)
+                        if expected_part_number != serial_partnumber:
+                            gui_app.create_PN_failure_window()
+                            gui_app.create_failure_window()
+                            return False
+                        else:
+                            return True
+                    else:
+                        return True
 
             if not valid_serial(gui_app.serial):
                 continue
@@ -97,9 +98,10 @@ def main():
             melexis.freeze(2)
 
             # realiza la prueba
-
-
+            print("HOLA")
 
 
 if __name__ == "__main__":
+    gui_app = MyApplication()
     main()
+    gui_app.mainloop()

@@ -42,11 +42,12 @@ class MyApplication(tk.Tk):
 
     def process_serial(self, event):
         serial = self.serial_entry.get()
-        self.serial_entry.delete(0, tk.END)
+        # self.serial_entry.delete(0, tk.END)
         print(serial)  # Replace this with the desired operation
 
     def start_test(self):
         self.test = True
+        self.serial_entry.delete(0, tk.END)
 
     def close_main_window(self):
         self.destroy()
