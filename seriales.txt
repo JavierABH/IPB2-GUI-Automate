@@ -1,0 +1,10 @@
+G58381080000L305
+G583810800005S10
+
+
+necesito metodos para llamarlos desde el main.py,
+1.- uno que oculte la ventana principal
+2.- otro que vuelva a llamar la ventana principal
+3.- una ventana nueva de si paso la pcb paso la prueba, salga una ventana de fondo verde que diga "Avance al siguiente proceso" y un boton que diga ok para salir (al presionar ok, debe volver la ventana principal)
+4.- otro donde si fallo la prueba, diga "PCB con falla" y el fondo de color rojo y un boton que diga ok para salir (al presionar ok, debe volver la ventana principal)
+5.-una de fondo rojo que diga "Falla de Backcheck" y un boton que diga ok para salir (al presionar ok, debe volver la ventana principal)
