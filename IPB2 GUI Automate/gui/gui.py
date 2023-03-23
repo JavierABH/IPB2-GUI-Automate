@@ -7,7 +7,7 @@ class MyApplication(tk.Tk):
         super().__init__()
 
         self.serial = None  
-        self.start_test = None
+        self.start_test = False
         self.title("IPB2 Sequence")
         self.geometry("200x100")
         self.protocol("WM_DELETE_WINDOW", self.confirm_exit)
@@ -46,8 +46,7 @@ class MyApplication(tk.Tk):
         print(serial)  # Replace this with the desired operation
 
     def start(self):
-        
-        pass
+        self.start_test = True
 
     def hide(self):
         self.withdraw()
