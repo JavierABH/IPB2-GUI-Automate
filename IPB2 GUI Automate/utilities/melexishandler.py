@@ -175,3 +175,62 @@ class ProgramHandler:
             if keyboard.is_pressed('esc'):
                 print("Monitoring stopped.")
                 break
+
+    def press_and_release_keys(self, keys):
+        """
+        Presses and releases the specified keys in order.
+
+        Args:
+            keys (list of str): The names of the keys.
+
+        Returns:
+            None
+        """
+        try:
+            for key in keys:
+                keyboard.press_and_release(key)
+        except Exception as e:
+            print(f"Error pressing and releasing keys: {e}")
+
+    def press_key_kb(self, key):
+        """
+        Presses and holds the specified key.
+
+        Args:
+            key (str): The name of the key.
+
+        Returns:
+            None
+        """
+        try:
+            keyboard.press(key)
+        except Exception as e:
+            print(f"Error pressing key: {e}")
+
+    def release_key(self, key):
+        """
+        Releases the specified key.
+
+        Args:
+            key (str): The name of the key.
+
+        Returns:
+            None
+        """
+        try:
+            keyboard.release(key)
+        except Exception as e:
+            print(f"Error releasing key: {e}")
+
+    def key_name(self):
+        """
+        Identifies the name of the key being pressed.
+
+        Returns:
+            None
+        """
+        try:
+            key = keyboard.read_key()
+            print(f"You pressed: {key}")
+        except Exception as e:
+            print(f"Error identifying key: {e}")
